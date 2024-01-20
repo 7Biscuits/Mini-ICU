@@ -11,7 +11,6 @@ passport.use(
     async (email: string, password: string, done): Promise<void> => {
       try {
         const user = await User.findOne({ email: email });
-        console.log(user);
         if (!user) {
           return done(null, false, { message: "Incorrect username." });
         }

@@ -1,11 +1,11 @@
-import express, { Request, Response } from "express";
+import { Router, Request, Response } from "express";
 import { json, urlencoded } from "body-parser";
 import session from "express-session";
 import passport from "passport";
 import { signup } from "../controllers/auth.controller";
 import "../config/passport.config";
 
-export const authRouter: express.Router = express.Router();
+export const authRouter: Router = Router();
 
 authRouter.use(
   session({

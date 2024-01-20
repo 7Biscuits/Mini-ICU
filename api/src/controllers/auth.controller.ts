@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/User";
-import { IUser } from "../interfaces/IUser";
+import { IUser } from "../interfaces";
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -10,13 +10,14 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const newUser = new User({
+    const newUser: IUser = new User({
       email: email,
       password: password,
       name: name,
       age: age,
-    }).save();
+    });
 
+    newUser.save();
     res.json({ message: "Signup successful", user: newUser });
   } catch (err) {
     res.status(400).json({ message: "An error occured", error: err });
