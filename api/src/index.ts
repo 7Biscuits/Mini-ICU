@@ -4,6 +4,8 @@ import session from "express-session";
 import cors from "cors";
 import { connect } from "mongoose";
 import { authRouter } from "./routes/auth.router";
+import { monitorRouter } from "./routes/monitor.router";
+import { patientRouter } from "./routes/patient.router";
 import { getIPAddress } from "./helpers/getIP";
 import { configDotenv } from "dotenv";
 
@@ -18,9 +20,6 @@ const app: Express = express();
 app.use(
   session({
     secret: `${process.env.SESSION_SECRET}`,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    },
     resave: false,
     saveUninitialized: false,
   })
@@ -36,6 +35,8 @@ app.get("/", (_: Request, res: Response): void => {
 });
 
 app.use("/auth", authRouter);
+app.use("/api", monitorRouter);
+app.use("/api", patientRouter);
 
 const port = process.env.PORT || 8080;
 

@@ -7,8 +7,8 @@ import {
 
 export const monitorRouter: Router = Router();
 
-monitorRouter.route("/getMonitorData").get(getMonitorData);
+monitorRouter.route("/monitor").get(getMonitorData);
 monitorRouter
-  .route("/postMonitorData/:bloodOxygenLevel/:ecg/:emg")
+  .route("/monitor/:bloodOxygenLevel/:ecg/:emg")
   .get(postMonitorData);
-monitorRouter.route("/deleteMonitorData").delete(deleteMonitorData);
+monitorRouter.route("/monitor").delete(deleteMonitorData);

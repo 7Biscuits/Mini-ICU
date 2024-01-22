@@ -2,12 +2,6 @@ import { Request, Response } from "express";
 import Monitor from "../models/Monitor";
 import { IMonitor } from "../interfaces";
 
-type TMonitorParams = {
-  bloodOxygenLevel: number;
-  ecg: number;
-  emg: number;
-};
-
 export const getMonitorData = (_: Request, res: Response): void => {
   try {
     const data = Monitor.find();
@@ -21,11 +15,11 @@ export const getMonitorData = (_: Request, res: Response): void => {
 };
 
 export const postMonitorData = (
-  req: Request<TMonitorParams>,
+  req: Request<IMonitor>,
   res: Response
 ): void => {
   try {
-    const { bloodOxygenLevel, ecg, emg }: TMonitorParams = req.params;
+    const { bloodOxygenLevel, ecg, emg }: IMonitor = req.params;
 
     const data: IMonitor = new Monitor({
       bloodOxygenLevel: bloodOxygenLevel,
