@@ -4,6 +4,7 @@ import session from "express-session";
 import cors from "cors";
 import { connect } from "mongoose";
 import { authRouter } from "./routes/auth.router";
+import { userRouter } from "./routes/user.router";
 import { monitorRouter } from "./routes/monitor.router";
 import { patientRouter } from "./routes/patient.router";
 import { getIPAddress } from "./helpers/getIP";
@@ -35,6 +36,7 @@ app.get("/", (_: Request, res: Response): void => {
 });
 
 app.use("/auth", authRouter);
+app.use("/api", userRouter);
 app.use("/api", monitorRouter);
 app.use("/api", patientRouter);
 

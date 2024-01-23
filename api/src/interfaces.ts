@@ -1,6 +1,7 @@
 import { Document } from "mongoose";
 
 export interface IUser extends Document {
+  userId: string;
   email: string;
   password: string;
   name: string;
@@ -14,6 +15,7 @@ export interface IMonitor extends Document {
 }
 
 export interface IPatient extends Document {
+  patientId: string;
   name: string;
   age: number;
   gender: string;

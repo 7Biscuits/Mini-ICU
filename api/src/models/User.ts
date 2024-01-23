@@ -1,7 +1,13 @@
 import { Schema, model } from "mongoose";
 import { IUser } from "../interfaces";
+import { nanoid } from "nanoid";
 
 const UserSchema = new Schema<IUser>({
+  userId: {
+    type: String,
+    required: true,
+    default: () => `u-${nanoid(5).toLowerCase()}`,
+  },
   email: {
     type: String,
     unique: true,
@@ -22,7 +28,7 @@ const UserSchema = new Schema<IUser>({
   age: {
     type: Number,
     required: true,
-  }
+  },
 });
 
 export default model<IUser>("User", UserSchema);

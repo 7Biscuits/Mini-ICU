@@ -19,11 +19,11 @@ export const getPatient = async (
   res: Response
 ): Promise<void> => {
   try {
-    const patient = await Patient.findById(req.params.id);
+    const patient = await Patient.findOne({ patientId: req.params.patientId });
     if (!patient) {
       res
         .status(400)
-        .json({ message: `Patient with id '${req.params.id}' doesn't exists` });
+        .json({ message: `Patient with id '${req.params.patientId}' doesn't exists` });
       return;
     }
     res.json({ patient: patient });

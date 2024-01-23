@@ -7,6 +7,6 @@ export const patientRouter: Router = Router();
 patientRouter.use(json(), urlencoded({ extended: true }));
 
 patientRouter.route("/patients").get(getPatients);
-patientRouter.route("patient/:id").get(getPatient);
+patientRouter.route("patient/:patientId").get(getPatient);
 patientRouter.route("/patient/create").post(createPatient);
 patientRouter.route("/patients").delete(deletePatients);
