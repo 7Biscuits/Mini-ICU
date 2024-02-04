@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import Patient from "../models/Patient";
 import { IPatient } from "../interfaces";
 
-export const getPatients = (_: Request, res: Response): void => {
+export const getPatients = async (_: Request, res: Response): Promise<void> => {
   try {
-    const patients = Patient.find();
+    const patients = await Patient.find();
     res.json({ patients: patients });
   } catch (err) {
     res.status(400).json({

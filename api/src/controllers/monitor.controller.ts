@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import Monitor from "../models/Monitor";
 import { IMonitor } from "../interfaces";
 
-export const getMonitorData = (_: Request, res: Response): void => {
+export const getMonitorData = async (_: Request, res: Response): Promise<void> => {
   try {
-    const data = Monitor.find();
+    const data = await Monitor.find();
     res.json({ data: data });
   } catch (err) {
     res.json({
@@ -14,10 +14,10 @@ export const getMonitorData = (_: Request, res: Response): void => {
   }
 };
 
-export const postMonitorData = (
+export const postMonitorData = async (
   req: Request<IMonitor>,
   res: Response
-): void => {
+): Promise<void> => {
   try {
     const { bloodOxygenLevel, ecg, emg }: IMonitor = req.params;
 

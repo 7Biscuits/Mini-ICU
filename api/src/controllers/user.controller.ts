@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import User from "../models/User";
 
-export const getUsers = (_: Request, res: Response): void => {
+export const getUsers = async (_: Request, res: Response): Promise<void> => {
   try {
-    const users = User.find();
+    const users = await User.find();
     res.json({ users: users });
   } catch (err) {
     res.status(400).json({
@@ -22,6 +22,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
         .json({ message: `User with id ${req.params.userId} doesn't exist` });
       return;
     }
+    res.json({ user: user });
   } catch (err) {
     res.status(400).json({
       message: "An error occured while fetching this user",
@@ -30,7 +31,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const deleteUser = (req: Request, res: Response): void => {
+export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = User.findOneAndDelete({ userId: req.params.userId });
     res.json({ message: "User deleted successfully", user: user });

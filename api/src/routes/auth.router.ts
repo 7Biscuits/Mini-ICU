@@ -30,6 +30,8 @@ authRouter.post("/login", (req: Request, res: Response, next) => {
       return res.status(500).json({ message: "An error occurred", error: err });
     }
 
+    // console.log(user);
+
     if (!user) {
       return res
         .status(401)
