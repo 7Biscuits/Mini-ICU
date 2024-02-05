@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import { categories, user, workoutPlans, workouts } from "../data";
@@ -23,10 +23,34 @@ import SectionHeader from "../components/SectionHeader";
 import Workout from "../components/Workout";
 import Rating from "react-native-easy-rating";
 import Screen from "../components/Screen";
+import { getUser } from "../services/user";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
 const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+  const [userS, setUser] = useState({
+    email: "",
+    name: "",
+    age: 0,
+    userId: "",
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const userid = await AsyncStorage.getItem("userid");
+      if (!userid) {
+        console.log("userid not found");
+        return;
+      };
+      const response = await getUser(userid);
+      setUser(response.user);
+      console.log("done done doen");
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <Screen>
       <ScrollView
@@ -67,7 +91,7 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
                   textTransform: "capitalize",
                 }}
               >
-                {user.name}
+                {userS.name}
               </AppText>
             </View>
           </View>

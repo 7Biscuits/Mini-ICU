@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 import Monitor from "../models/Monitor";
 import { IMonitor } from "../interfaces";
 
-export const getMonitorData = async (_: Request, res: Response): Promise<void> => {
+export const getMonitorData = async (
+  _: Request,
+  res: Response
+): Promise<void> => {
   try {
     const data = await Monitor.find();
     res.json({ data: data });
@@ -40,11 +43,16 @@ export const postMonitorData = async (
 export const deleteMonitorData = (_: Request, res: Response): void => {
   try {
     const data = Monitor.deleteMany({});
-    res.json({ message: "All Monitor data deleted", data: data });
+    res.json({
+      message: "All Monitor data deleted",
+      data: data,
+      status: res.statusCode,
+    });
   } catch (err) {
     res.status(400).json({
       message: "An error occured while deleting monitor data",
       error: err,
+      status: res.statusCode,
     });
   }
 };

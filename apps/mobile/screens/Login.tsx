@@ -1,4 +1,4 @@
-import { Dimensions, Text, TextInput, View } from "react-native";
+import { Dimensions, Text, TextInput, View, Alert } from "react-native";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import FontSize from "../constants/FontSize";
@@ -19,12 +19,18 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [password, setPassword] = useState("");
 
   const handlePress = async (): Promise<void> => {
+    console.log(email, password);
     const response = await login(email, password);
-
-    await AsyncStorage.setItem('userid', response.user.userId);
-    // console.log("ussss", await AsyncStorage.getItem('userid'));
-    navigate("Home");
-  }
+    console.log(response);
+    if (response.status === 200) {
+      await AsyncStorage.setItem("userid", response.user.userId);
+      Alert.alert(response.message, "Now you can login to your account", [
+        { text: "OK", onPress: () => navigate("Home") },
+      ]);
+    } else {
+      Alert.alert(response.message, response.error, [{ text: "OK" }]);
+    }
+  };
 
   return (
     <View
@@ -64,46 +70,46 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           Please signin to continue
         </Text>
         <View style={{ width: 250 }}>
-            <TextInput
-              placeholder="Enter username or email"
-              placeholderTextColor={Colors.text}
-              style={{
-                fontSize: FontSize.base,
-                backgroundColor: "#232b2b",
-                height: 50,
-                borderColor: Colors.accent,
-                borderWidth: 1,
-                marginBottom: 10,
-                padding: 15,
-                borderRadius: 5,
-                color: Colors.accent,
-              }}
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              multiline={false}
-              numberOfLines={1}
-              scrollEnabled={true}
-            />
-            <TextInput
-              placeholder="Enter password"
-              placeholderTextColor={Colors.text}
-              style={{
-                fontSize: FontSize.base,
-                backgroundColor: "#232b2b",
-                height: 50,
-                borderColor: Colors.accent,
-                borderWidth: 1,
-                marginBottom: 10,
-                padding: 15,
-                borderRadius: 5,
-                color: Colors.accent,
-              }}
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              multiline={false}
-              numberOfLines={1}
-              scrollEnabled={true}
-            />
+          <TextInput
+            placeholder="Enter username or email"
+            placeholderTextColor={Colors.text}
+            style={{
+              fontSize: FontSize.base,
+              backgroundColor: "#232b2b",
+              height: 50,
+              borderColor: Colors.accent,
+              borderWidth: 1,
+              marginBottom: 10,
+              padding: 15,
+              borderRadius: 5,
+              color: Colors.accent,
+            }}
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            multiline={false}
+            numberOfLines={1}
+            scrollEnabled={true}
+          />
+          <TextInput
+            placeholder="Enter password"
+            placeholderTextColor={Colors.text}
+            style={{
+              fontSize: FontSize.base,
+              backgroundColor: "#232b2b",
+              height: 50,
+              borderColor: Colors.accent,
+              borderWidth: 1,
+              marginBottom: 10,
+              padding: 15,
+              borderRadius: 5,
+              color: Colors.accent,
+            }}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            multiline={false}
+            numberOfLines={1}
+            scrollEnabled={true}
+          />
         </View>
         <View style={{ paddingTop: 10 }}>
           <Button style={{ margin: 10 }} onPress={handlePress}>

@@ -6,7 +6,9 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password, name, age }: IUser = req.body;
     if (await User.findOne({ email: email })) {
-      res.status(400).json({ message: "User already exists" });
+      res
+        .status(400)
+        .json({ message: "User already exists", status: res.statusCode });
       return;
     }
 
@@ -18,8 +20,18 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     });
 
     newUser.save();
-    res.json({ message: "Signup successful", user: newUser });
+    res.json({
+      message: "Signup successful",
+      user: newUser,
+      status: res.statusCode,
+    });
   } catch (err) {
-    res.status(400).json({ message: "An error occured", error: err });
+    res
+      .status(400)
+      .json({
+        message: "An error occured",
+        error: err,
+        status: res.statusCode,
+      });
   }
 };
