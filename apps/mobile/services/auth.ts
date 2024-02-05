@@ -1,4 +1,4 @@
-import { IP } from "../env";
+import { BASE_URL } from "../env";
 
 export const signup = async (
   email: string,
@@ -6,7 +6,7 @@ export const signup = async (
   name: string,
   age: string
 ): Promise<any> => {
-  const data = await fetch(`http://${IP}:8080/auth/signup`, {
+  const data = await fetch(`${BASE_URL}/auth/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

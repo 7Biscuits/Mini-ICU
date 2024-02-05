@@ -25,6 +25,8 @@ import Rating from "react-native-easy-rating";
 import Screen from "../components/Screen";
 import { getUser } from "../services/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Button from "../components/Button";
+import PatientDialog from "../components/PatientDialog";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -35,6 +37,7 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
     age: 0,
     userId: "",
   });
+  const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,11 +45,11 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
       if (!userid) {
         console.log("userid not found");
         return;
-      };
+      }
       const response = await getUser(userid);
       setUser(response.user);
       console.log("done done doen");
-    }
+    };
 
     fetchData();
   }, []);
@@ -69,10 +72,11 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             style={{
               flexDirection: "row",
               alignItems: "center",
+              marginTop: 15,
             }}
           >
             <Image
-              source={user.profile}
+              source={require("../assets/images/default_pfp.jpeg")}
               style={{
                 height: 50,
                 width: 50,
@@ -95,7 +99,7 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               </AppText>
             </View>
           </View>
-          <IconButton name='notifications' />
+          <IconButton name="notifications" />
         </View>
 
         <View
@@ -110,29 +114,33 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             alignItems: "center",
           }}
         >
-          <Ionicons name='search-outline' size={24} color={Colors.text} />
+          <Ionicons name="search-outline" size={24} color={Colors.text} />
           <TextInput
-            placeholder='Search Workouts..'
+            placeholder="Search Patients"
             placeholderTextColor={Colors.text}
             style={{
               fontSize: FontSize.base,
-              width: "80%",
+              width: "75%",
+              marginLeft: 5,
             }}
           />
           <IconButton
-            name='options-outline'
+            name="options-outline"
             style={{
               backgroundColor: Colors.accent,
             }}
             color={Colors.black}
           />
         </View>
-        <CategoryList />
-        <SectionHeader title='Featured Workouts' />
+        <Button style={{ margin: 10 }} onPress={() => setHidden(!hidden)}>
+          Add Patient
+        </Button>
+        <PatientDialog hidden={hidden} />
+        <SectionHeader title="Featured Workouts" />
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          decelerationRate='fast'
+          decelerationRate="fast"
           pagingEnabled
           snapToInterval={270 + Spacing.margin.lg}
         >
@@ -144,7 +152,7 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             />
           ))}
         </ScrollView>
-        <SectionHeader title='Trending Plans' />
+        <SectionHeader title="Trending Plans" />
         {workoutPlans.map((plan) => (
           <TouchableOpacity
             style={{
@@ -184,7 +192,7 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
                 }}
               >
                 <Ionicons
-                  name='calendar-outline'
+                  name="calendar-outline"
                   size={16}
                   color={Colors.text}
                 />

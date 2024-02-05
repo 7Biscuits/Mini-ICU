@@ -1,8 +1,8 @@
-import { IP } from "../env";
+import { BASE_URL } from "../env";
 
 export const getUser = async (userId: string): Promise<any> => {
   const response = await fetch(
-    `http://${IP}:8080/api/user/${userId}`,
+    `${BASE_URL}/api/user/${userId}`,
     {
       method: "GET",
     }
