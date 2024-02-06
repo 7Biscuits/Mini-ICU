@@ -26,14 +26,8 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
       });
       return;
     }
-    
-    const userObj = {
-      name: user.name,
-      email: user.email,
-      age: user.age,
-      userId: user.userId,
-    }
-    res.json({ user: userObj, status: res.statusCode });
+
+    res.json({ user: user, status: res.statusCode });
   } catch (err) {
     res.status(400).json({
       message: "An error occured while fetching this user",

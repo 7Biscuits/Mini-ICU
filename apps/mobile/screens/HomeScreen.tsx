@@ -1,16 +1,14 @@
 import {
   Image,
-  SafeAreaView,
   ScrollView,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { Logs } from "expo"
 import React, { useState, useEffect } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
-import { categories, user, workoutPlans, workouts } from "../data";
 import Colors from "../constants/Colors";
 import Font from "../constants/Font";
 import FontSize from "../constants/FontSize";
@@ -18,37 +16,71 @@ import AppText from "../components/AppText";
 import Spacing from "../constants/Spacing";
 import { Ionicons } from "@expo/vector-icons";
 import IconButton from "../components/IconButton";
-import CategoryList from "../components/CategoryList";
 import SectionHeader from "../components/SectionHeader";
-import Workout from "../components/Workout";
-import Rating from "react-native-easy-rating";
 import Screen from "../components/Screen";
 import { getUser } from "../services/user";
+import { getPatients, createPatient } from "../services/patient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../components/Button";
 import PatientDialog from "../components/PatientDialog";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
+Logs.enableExpoCliLogging();
+
 const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const [userS, setUser] = useState({
+  console.log("asdasdasdasdnkejwdnkandkjnei");
+  const [user, setUser] = useState({
     email: "",
     name: "",
     age: 0,
     userId: "",
   });
+
+  const [patients, setPatients] = useState<any>([]);
   const [hidden, setHidden] = useState(true);
 
+  const fetchUser = async (): Promise<void> => {
+    const userid = await AsyncStorage.getItem("userid");
+    if (!userid) {
+      console.log("userid not found");
+      return;
+    }
+    const response = await getUser(userid);
+    console.log(response);
+    setUser(response);
+  };
+
+  const fetchPatients = async (): Promise<void> => {
+    try {
+      const response = await getPatients();
+      console.log(response);
+      setPatients(response.patients);
+    } catch (error) {
+      console.error("Error fetching patients:", error);
+    }
+  };
+
+  const handleAddPatient = async (
+    name: string,
+    age: string,
+    gender: string,
+    disease: string
+  ): Promise<void> => {
+    const userid = await AsyncStorage.getItem("userid");
+    if (!userid) {
+      console.log("userid not found");
+      return;
+    }
+    const newPatient = await createPatient(name, age, gender, disease);
+    setPatients([...patients, newPatient]);
+  };
+
   useEffect(() => {
+    console.log("hello from home")
     const fetchData = async () => {
-      const userid = await AsyncStorage.getItem("userid");
-      if (!userid) {
-        console.log("userid not found");
-        return;
-      }
-      const response = await getUser(userid);
-      setUser(response.user);
-      console.log("done done doen");
+      await fetchUser();
+      await fetchPatients();
     };
 
     fetchData();
@@ -95,7 +127,7 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
                   textTransform: "capitalize",
                 }}
               >
-                {userS.name}
+                {user.name}
               </AppText>
             </View>
           </View>
@@ -132,28 +164,13 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             color={Colors.black}
           />
         </View>
-        <Button style={{ margin: 10 }} onPress={() => setHidden(!hidden)}>
+        <Button style={{ margin: 10 }} onPress={() => { setHidden(!hidden)
+        console.log("press")}} >
           Add Patient
         </Button>
-        <PatientDialog hidden={hidden} />
-        <SectionHeader title="Featured Workouts" />
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          decelerationRate="fast"
-          pagingEnabled
-          snapToInterval={270 + Spacing.margin.lg}
-        >
-          {workouts.map((workout) => (
-            <Workout
-              onPress={() => navigate("PlanOverview", { workout: workout })}
-              workout={workout}
-              key={workout.id}
-            />
-          ))}
-        </ScrollView>
-        <SectionHeader title="Trending Plans" />
-        {workoutPlans.map((plan) => (
+        <PatientDialog hidden={hidden} handlePress={handleAddPatient} />
+        <SectionHeader title="Your Patients" />
+        {patients.map((patient: any) => (
           <TouchableOpacity
             style={{
               padding: Spacing.padding.sm,
@@ -162,14 +179,16 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               borderRadius: Spacing.borderRadius.base,
               flexDirection: "row",
             }}
-            key={plan.id}
+            key={patient.patientId}
+            onPress={() => navigate("ICUMonitor", { patient: patient })}
           >
             <Image
-              source={plan.image}
+              source={require("../assets/images/default_pfp.jpeg")}
               style={{
-                width: 100,
-                height: 100,
+                width: 50,
+                height: 50,
                 borderRadius: Spacing.borderRadius.base,
+                marginTop: 10,
               }}
             />
             <View
@@ -178,12 +197,44 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
                 justifyContent: "space-between",
               }}
             >
-              <AppText
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <AppText
+                  style={{
+                    fontFamily: Font["poppins-semiBold"],
+                  }}
+                >
+                  {patient.name}
+                </AppText>
+                <AppText
+                  style={{
+                    fontFamily: Font["poppins-regular"],
+                    fontSize: FontSize.sm,
+                    padding: 3,
+                  }}
+                >
+                  ({patient.patientId})
+                </AppText>
+              </View>
+              <View
                 style={{
-                  fontFamily: Font["poppins-semiBold"],
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
               >
-                {plan.name}
+                <AppText
+                  style={{
+                    marginLeft: Spacing.margin.base,
+                  }}
+                >
+                  {patient.age} | {patient.gender}
+                </AppText>
+              </View>
+              <AppText
+                style={{
+                  marginLeft: Spacing.margin.base,
+                }}
+              >
+                Disease: {patient.disease}
               </AppText>
               <View
                 style={{
@@ -198,30 +249,10 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
                 />
                 <AppText
                   style={{
-                    marginLeft: Spacing.margin.base,
-                  }}
-                >
-                  {plan.duration} | {plan.location}
-                </AppText>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Rating
-                  rating={plan.rating}
-                  max={5}
-                  iconWidth={20}
-                  iconHeight={20}
-                />
-                <AppText
-                  style={{
                     marginLeft: Spacing.margin.sm,
                   }}
                 >
-                  {plan.rating}
+                  {patient.dateAdded}
                 </AppText>
               </View>
             </View>

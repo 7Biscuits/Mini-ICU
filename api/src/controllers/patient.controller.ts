@@ -65,9 +65,9 @@ export const createPatient = (req: Request<IPatient>, res: Response): void => {
   }
 };
 
-export const deletePatients = (_: Request, res: Response): void => {
+export const deletePatients = async (_: Request, res: Response): Promise<void> => {
   try {
-    const data = Patient.deleteMany({});
+    const data = await Patient.deleteMany({});
     res.json({
       message: "All patients deleted successfully",
       data: data,

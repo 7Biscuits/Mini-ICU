@@ -23,8 +23,7 @@ export const signup = async (
 };
 
 export const login = async (email: string, password: string): Promise<any> => {
-  console.log(`login: ${email}`);
-  const data = await fetch(`http://${IP}:8080/auth/login`, {
+  const data = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,6 +31,5 @@ export const login = async (email: string, password: string): Promise<any> => {
     body: JSON.stringify({ email: email, password: password }),
   });
   const response = await data.json();
-  console.log(response);
   return response;
 };

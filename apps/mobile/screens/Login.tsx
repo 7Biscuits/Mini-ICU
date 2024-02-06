@@ -19,7 +19,6 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [password, setPassword] = useState("");
 
   const handlePress = async (): Promise<void> => {
-    console.log(email, password);
     const response = await login(email, password);
     console.log(response);
     if (response.status === 200) {
@@ -28,7 +27,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         { text: "OK", onPress: () => navigate("Home") },
       ]);
     } else {
-      Alert.alert(response.message, response.error, [{ text: "OK" }]);
+      Alert.alert("An error occured", response.message, [{ text: "OK" }]);
     }
   };
 
