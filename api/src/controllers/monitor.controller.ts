@@ -40,9 +40,9 @@ export const postMonitorData = async (
   }
 };
 
-export const deleteMonitorData = (_: Request, res: Response): void => {
+export const deleteMonitorData = async (_: Request, res: Response): Promise<void> => {
   try {
-    const data = Monitor.deleteMany({});
+    const data = await Monitor.deleteMany({});
     res.json({
       message: "All Monitor data deleted",
       data: data,

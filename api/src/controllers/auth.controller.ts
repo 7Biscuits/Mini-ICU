@@ -26,12 +26,10 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       status: res.statusCode,
     });
   } catch (err) {
-    res
-      .status(400)
-      .json({
-        message: "An error occured",
-        error: err,
-        status: res.statusCode,
-      });
+    res.status(400).json({
+      message: "An error occured",
+      error: err,
+      status: res.statusCode,
+    });
   }
 };
