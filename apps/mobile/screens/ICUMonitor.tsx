@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import Card from "../components/Card";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { Video, ResizeMode } from "expo-av";
 import Colors from "../constants/Colors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -11,6 +10,7 @@ import Font from "../constants/Font";
 import FontSize from "../constants/FontSize";
 import AppText from "../components/AppText";
 import { Ionicons } from "@expo/vector-icons";
+import { getMonitorData } from "../services/monitor";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ICUMonitor">;
 
@@ -21,107 +21,117 @@ export default function ICUMonitor({ route }: Props) {
   const [emg, setEmg] = useState(90);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const spo2Value = Math.floor(Math.random() * (100 - 80 + 1) + 80);
-      const ecgValue = Math.floor(Math.random() * (100 - 80 + 1) + 80);
-      const emgValue = Math.floor(Math.random() * (100 - 80 + 1) + 80);
+    const fetchData = async (): Promise<void> => {
+      const monitorData = await getMonitorData();
+      setSpo2(monitorData[monitorData.length - 1].bloodOxygenLevel);
+      setEcg(monitorData[monitorData.length - 1].ecg);
+      setEmg(monitorData[monitorData.length - 1].emg);
+    };
 
-      setSpo2(spo2Value);
-      setEcg(ecgValue);
-      setEmg(emgValue);
-    }, 1000);
+    fetchData();
+    const fetchDataInterval = setInterval(fetchData, 2500);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(fetchDataInterval);
   }, []);
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       const spo2Value = Math.floor(Math.random() * (100 - 80 + 1) + 80);
+//       const ecgValue = Math.floor(Math.random() * (100 - 80 + 1) + 80);
+//       const emgValue = Math.floor(Math.random() * (100 - 80 + 1) + 80);
+
+//       setSpo2(spo2Value);
+//       setEcg(ecgValue);
+//       setEmg(emgValue);
+//     }, 1000);
+
+//     return () => clearInterval(interval);
+//   }, []);
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <View>
         <View
+          style={{
+            padding: Spacing.padding.xl,
+            backgroundColor: Colors.primary,
+            borderRadius: Spacing.borderRadius.base,
+            flexDirection: "row",
+          }}
+          key={patient.patientId}
+        >
+          <Image
+            source={require("../assets/images/default_pfp.jpeg")}
             style={{
-              padding: Spacing.padding.xl,
-              backgroundColor: Colors.primary,
+              width: 100,
+              height: 100,
               borderRadius: Spacing.borderRadius.base,
-              flexDirection: "row",
+              marginTop: 10,
             }}
-            key={patient.patientId}
+          />
+          <View
+            style={{
+              marginLeft: Spacing.margin.xl,
+              justifyContent: "space-between",
+            }}
           >
-            <Image
-              source={require("../assets/images/default_pfp.jpeg")}
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: Spacing.borderRadius.base,
-                marginTop: 10,
-              }}
-            />
-            <View
-              style={{
-                marginLeft: Spacing.margin.xl,
-                justifyContent: "space-between",
-              }}
-            >
-              <View style={{ display: "flex", flexDirection: "row" }}>
-                <AppText
-                  style={{
-                    fontFamily: Font["poppins-semiBold"],
-                  }}
-                >
-                  {patient.name}
-                </AppText>
-                <AppText
-                  style={{
-                    fontFamily: Font["poppins-regular"],
-                    fontSize: FontSize.sm,
-                    padding: 3,
-                  }}
-                >
-                  ({patient.patientId})
-                </AppText>
-              </View>
-              <View
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <AppText
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
+                  fontFamily: Font["poppins-semiBold"],
                 }}
               >
-                <AppText
-                  style={{
-                    marginLeft: Spacing.margin.base,
-                  }}
-                >
-                  {patient.age} | {patient.gender}
-                </AppText>
-              </View>
+                {patient.name}
+              </AppText>
+              <AppText
+                style={{
+                  fontFamily: Font["poppins-regular"],
+                  fontSize: FontSize.sm,
+                  padding: 3,
+                }}
+              >
+                ({patient.patientId})
+              </AppText>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <AppText
                 style={{
                   marginLeft: Spacing.margin.base,
                 }}
               >
-                Disease: {patient.disease}
+                {patient.age} | {patient.gender}
               </AppText>
-              <View
+            </View>
+            <AppText
+              style={{
+                marginLeft: Spacing.margin.base,
+              }}
+            >
+              Disease: {patient.disease}
+            </AppText>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Ionicons name="calendar-outline" size={16} color={Colors.text} />
+              <AppText
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
+                  marginLeft: Spacing.margin.sm,
                 }}
               >
-                <Ionicons
-                  name="calendar-outline"
-                  size={16}
-                  color={Colors.text}
-                />
-                <AppText
-                  style={{
-                    marginLeft: Spacing.margin.sm,
-                  }}
-                >
-                  {patient.dateAdded}
-                </AppText>
-              </View>
+                {patient.dateAdded}
+              </AppText>
             </View>
           </View>
+        </View>
       </View>
       <View
         style={{
@@ -167,7 +177,7 @@ export default function ICUMonitor({ route }: Props) {
             <Text>Condition</Text>
             <View style={styles.subCardView}>
               <Text
-                style={{ fontSize: 12, color: spo2 < 90 ? "red" : "green" }}
+                style={{ fontSize: 12, color: spo2 < 90 ? "red" : Colors.accent }}
               >
                 {spo2 < 90 ? "Critical" : "Normal"}
               </Text>
