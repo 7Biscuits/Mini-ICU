@@ -44,6 +44,7 @@ authRouter.post("/login", (req: Request, res: Response, next) => {
           .status(500)
           .json({ message: "An error occurred during login", error: err, status: res.statusCode });
         return;
+        
       }
       res.json({ message: "Login successful", user: user, status: res.statusCode });
     });

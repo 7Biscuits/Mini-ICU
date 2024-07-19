@@ -10,6 +10,7 @@ export interface IUser extends Document {
 
 export interface IMonitor extends Document {
   bloodOxygenLevel: number;
+  heartBeat: number;
   ecg: number;
   emg: number;
 }

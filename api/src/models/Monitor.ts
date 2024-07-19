@@ -6,6 +6,11 @@ const MonitorSchema = new Schema<IMonitor>({
     type: Number,
     required: true,
   },
+  heartBeat: {
+    type: Number,
+    required: true,
+  },
+  /*
   ecg: {
     type: Number,
     required: true,
@@ -14,6 +19,7 @@ const MonitorSchema = new Schema<IMonitor>({
     type: Number,
     required: true,
   },
+  */
 });
 
 export default model<IMonitor>("Monitor", MonitorSchema);

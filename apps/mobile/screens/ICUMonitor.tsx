@@ -17,15 +17,17 @@ type Props = NativeStackScreenProps<RootStackParamList, "ICUMonitor">;
 export default function ICUMonitor({ route }: Props) {
   const patient = route.params.patient;
   const [spo2, setSpo2] = useState(90);
-  const [ecg, setEcg] = useState(90);
-  const [emg, setEmg] = useState(90);
+  const [bpm, setBpm] = useState(90);
+  const [ecg, setEcg] = useState(0);
+  const [emg, setEmg] = useState(0);
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       const monitorData = await getMonitorData();
       setSpo2(monitorData[monitorData.length - 1].bloodOxygenLevel);
-      setEcg(monitorData[monitorData.length - 1].ecg);
-      setEmg(monitorData[monitorData.length - 1].emg);
+      setBpm(monitorData[monitorData.length - 1].heartBeat);
+      // setEcg(monitorData[monitorData.length - 1].ecg);
+      // setEmg(monitorData[monitorData.length - 1].emg);
     };
 
     fetchData();
@@ -34,19 +36,19 @@ export default function ICUMonitor({ route }: Props) {
     return () => clearInterval(fetchDataInterval);
   }, []);
 
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       const spo2Value = Math.floor(Math.random() * (100 - 80 + 1) + 80);
-//       const ecgValue = Math.floor(Math.random() * (100 - 80 + 1) + 80);
-//       const emgValue = Math.floor(Math.random() * (100 - 80 + 1) + 80);
+  //   useEffect(() => {
+  //     const interval = setInterval(() => {
+  //       const spo2Value = Math.floor(Math.random() * (100 - 80 + 1) + 80);
+  //       const ecgValue = Math.floor(Math.random() * (100 - 80 + 1) + 80);
+  //       const emgValue = Math.floor(Math.random() * (100 - 80 + 1) + 80);
 
-//       setSpo2(spo2Value);
-//       setEcg(ecgValue);
-//       setEmg(emgValue);
-//     }, 1000);
+  //       setSpo2(spo2Value);
+  //       setEcg(ecgValue);
+  //       setEmg(emgValue);
+  //     }, 1000);
 
-//     return () => clearInterval(interval);
-//   }, []);
+  //     return () => clearInterval(interval);
+  //   }, []);
 
   return (
     <View style={styles.container}>
@@ -140,6 +142,31 @@ export default function ICUMonitor({ route }: Props) {
           marginTop: 10,
         }}
       >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 10,
+          }}
+        >
+          <View style={styles.mainCardView}>
+            <View style={{ flexDirection: "column", alignItems: "center" }}>
+              <Text>SPO2</Text>
+              <View style={styles.subCardView}>
+                <Text style={{ fontSize: 30 }}>{spo2}</Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.mainCardView}>
+            <View style={{ flexDirection: "column", alignItems: "center" }}>
+              <Text>BPM</Text>
+              <View style={styles.subCardView}>
+                <Text style={{ fontSize: 30 }}>{bpm}</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
         <View style={styles.mainCardView}>
           <View style={{ flexDirection: "column", alignItems: "center" }}>
             <Text>ECG</Text>
@@ -157,34 +184,26 @@ export default function ICUMonitor({ route }: Props) {
           </View>
         </View>
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          marginTop: 10,
-        }}
-      >
-        <View style={styles.mainCardView}>
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Text>SPO2</Text>
-            <View style={styles.subCardView}>
-              <Text style={{ fontSize: 30 }}>{spo2}</Text>
-            </View>
+
+      <View style={styles.mainCardView}>
+        <View style={{ flexDirection: "column", alignItems: "center" }}>
+          <Text>Condition</Text>
+          <View style={styles.subCardView}>
+            <Text
+              style={{
+                fontSize: 12,
+                color: spo2 < 90 ? "red" : Colors.accent,
+              }}
+            >
+              {spo2 < 90 ? "Critical" : "Normal"}
+            </Text>
           </View>
-        </View>
-        <View style={styles.mainCardView}>
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Text>Condition</Text>
-            <View style={styles.subCardView}>
-              <Text
-                style={{ fontSize: 12, color: spo2 < 90 ? "red" : Colors.accent }}
-              >
-                {spo2 < 90 ? "Critical" : "Normal"}
-              </Text>
-            </View>
+          <View style={styles.subCardView}>
+            <Text style={{ fontSize: 30 }}>{ecg}</Text>
           </View>
         </View>
       </View>
+
       <Video
         source={{
           uri: "https://static.videezy.com/system/resources/previews/000/038/626/original/alb_ekg004_1080p_24fps.mp4",

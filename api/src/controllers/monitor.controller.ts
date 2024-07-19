@@ -22,12 +22,18 @@ export const postMonitorData = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { bloodOxygenLevel, ecg, emg }: IMonitor = req.params;
+    const {
+      bloodOxygenLevel,
+      heartBeat,
+      // ecg,
+      // emg
+    }: IMonitor = req.params;
 
     const data: IMonitor = new Monitor({
       bloodOxygenLevel: bloodOxygenLevel,
-      ecg: ecg,
-      emg: emg,
+      heartBeat: heartBeat,
+      // ecg: ecg,
+      // emg: emg,
     });
 
     data.save();
@@ -40,7 +46,36 @@ export const postMonitorData = async (
   }
 };
 
-export const deleteMonitorData = async (_: Request, res: Response): Promise<void> => {
+/*export const postMonitorSpo2 = async (
+  req: Request<IMonitor>,
+  res: Response
+): Promise<void> => {
+  try {
+    const { bloodOxygenLevel, heartBeat } = req.params;
+    // const ecgValue = Math.floor(Math.random() * (100 - 80 + 1) + 80);
+    // const emgValue = Math.floor(Math.random() * (100 - 80 + 1) + 80);
+    const data: IMonitor = new Monitor({
+      bloodOxygenLevel: bloodOxygenLevel,
+      heartBeat: heartBeat,
+      // ecg: 0,
+      // emg: 0,
+    });
+
+    data.save();
+    res.json({ response: "Monitor data saved", data: data });
+  } catch (err) {
+    res.status(400).json({
+      message: "An error occured while posting monitor data",
+      error: err,
+    });
+  }
+};
+*/
+
+export const deleteMonitorData = async (
+  _: Request,
+  res: Response
+): Promise<void> => {
   try {
     const data = await Monitor.deleteMany({});
     res.json({
