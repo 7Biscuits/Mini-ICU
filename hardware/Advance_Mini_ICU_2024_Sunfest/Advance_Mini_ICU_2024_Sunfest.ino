@@ -111,13 +111,13 @@ int bluePin = 27;
 
 uint32_t tsLastReport = 0;
 
-// WiFiClient client;
-// HTTPClient httpClient;
+WiFiClient client;
+HTTPClient httpClient;
 
-// char ssid[] = "ATL";
-// char pass[] = "ATL@sbsR";
+char ssid[] = "ATL";
+char pass[] = "ATL@sbsR";
 
-// char ip[] = "10.10.0.15";
+char ip[] = "10.10.0.15";
 
 void onBeatDetected() {
   Serial.println("Beat!");
@@ -163,7 +163,7 @@ void setup() {
   // Register a callback for the beat detection
   pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
   pox.setOnBeatDetectedCallback(onBeatDetected);
-  // initWiFi();
+  initWiFi(); // Connecting to the wifi
 }
 
 void loop() {
@@ -191,7 +191,7 @@ void loop() {
     tft.print("SPO2: ");
     tft.print(spO2);
     tft.println("%");
-    // postData(spO2);
+    postData(spO2);
 
     // Control ventilator based on SpO2 level
     if (spO2 >= 0 && spO2 < 90) {
@@ -199,7 +199,7 @@ void loop() {
       tft.setTextSize(3);
       tft.setCursor(110, 110);
       tft.println("Mini-ICU Start!");
-      // Serial.println("Motor Start");
+      Serial.println("Motor Start");
       digitalWrite(relayPin, LOW);  // Relay low means relay On
       digitalWrite(greenPin, LOW);
       digitalWrite(bluePin, LOW);
@@ -212,25 +212,26 @@ void loop() {
       digitalWrite(greenPin, HIGH);
     }
   }
-  // postData(spO2);
+  
+  postData(spO2);
 }
 
-// void initWiFi() {
-//   WiFi.mode(WIFI_STA);
-//   WiFi.begin(ssid, pass);
-//   Serial.print("Connecting to WiFi");
-//   while (WiFi.status() != WL_CONNECTED) {
-//     Serial.print('.');
-//     delay(1000);
-//   }
-//   Serial.println(WiFi.localIP());
-// }
+void initWiFi() {
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, pass);
+  Serial.print("Connecting to WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print('.');
+    delay(1000);
+  }
+  Serial.println(WiFi.localIP());
+}
 
-// void postData(int spo2) {
-//   String spo2String = String(spo2);
-//   String URL = "http://" + String(ip) + ":8080/api/monitor/" + spo2String;
-//   httpClient.begin(client, URL);
-//   httpClient.POST(URL);
-//   Serial.println(URL);
-//   // delay(1500);
-// }
+void postData(int spo2) {
+  String spo2String = String(spo2);
+  String URL = "http://" + String(ip) + ":8080/api/monitor/" + spo2String;
+  httpClient.begin(client, URL);
+  httpClient.POST(URL);
+  Serial.println(URL);
+  // delay(1500);
+}

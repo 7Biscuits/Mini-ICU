@@ -132,6 +132,28 @@ export default function ICUMonitor({ route }: Props) {
                 {patient.dateAdded}
               </AppText>
             </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <AppText
+                style={{
+                  marginLeft: Spacing.margin.sm,
+                }}
+              >
+                Condition: 
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: spo2 < 90 ? "red" : Colors.accent,
+                  }}
+                >
+                  {spo2 < 90 ? " Critical" : " Normal"}
+                </Text>
+              </AppText>
+            </View>
           </View>
         </View>
       </View>
@@ -152,54 +174,51 @@ export default function ICUMonitor({ route }: Props) {
           <View style={styles.mainCardView}>
             <View style={{ flexDirection: "column", alignItems: "center" }}>
               <Text>SPO2</Text>
-              <View style={styles.subCardView}>
-                <Text style={{ fontSize: 30 }}>{spo2}</Text>
-              </View>
+              {/* <View style={styles.subCardView}> */}
+              <Text style={{ fontSize: 25 }}>{spo2}</Text>
+              {/* </View> */}
             </View>
           </View>
           <View style={styles.mainCardView}>
             <View style={{ flexDirection: "column", alignItems: "center" }}>
               <Text>BPM</Text>
-              <View style={styles.subCardView}>
-                <Text style={{ fontSize: 30 }}>{bpm}</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.mainCardView}>
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Text>ECG</Text>
-            <View style={styles.subCardView}>
-              <Text style={{ fontSize: 30 }}>{ecg}</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.mainCardView}>
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Text>EMG</Text>
-            <View style={styles.subCardView}>
-              <Text style={{ fontSize: 30 }}>{emg}</Text>
+              {/* <View style={styles.subCardView}> */}
+              <Text style={{ fontSize: 25 }}>{bpm}</Text>
+              {/* </View> */}
             </View>
           </View>
         </View>
       </View>
 
-      <View style={styles.mainCardView}>
-        <View style={{ flexDirection: "column", alignItems: "center" }}>
-          <Text>Condition</Text>
-          <View style={styles.subCardView}>
-            <Text
-              style={{
-                fontSize: 12,
-                color: spo2 < 90 ? "red" : Colors.accent,
-              }}
-            >
-              {spo2 < 90 ? "Critical" : "Normal"}
-            </Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          marginTop: 10,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 10,
+          }}
+        >
+          <View style={styles.mainCardView}>
+            <View style={{ flexDirection: "column", alignItems: "center" }}>
+              <Text>ECG</Text>
+              {/* <View style={styles.subCardView}> */}
+              <Text style={{ fontSize: 25 }}>0</Text>
+              {/* </View> */}
+            </View>
           </View>
-          <View style={styles.subCardView}>
-            <Text style={{ fontSize: 30 }}>{ecg}</Text>
+          <View style={styles.mainCardView}>
+            <View style={{ flexDirection: "column", alignItems: "center" }}>
+              <Text>EMG</Text>
+              {/* <View style={styles.subCardView}> */}
+              <Text style={{ fontSize: 25 }}>0</Text>
+              {/* </View> */}
+            </View>
           </View>
         </View>
       </View>
@@ -218,6 +237,7 @@ export default function ICUMonitor({ route }: Props) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

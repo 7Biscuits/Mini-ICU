@@ -4,7 +4,7 @@ import re
 import requests
 
 port = '/dev/cu.usbserial-0001'  # Update this line with the correct port
-baud_rate = 115200  # Should match the baud rate in your ESP32 code
+baud_rate = 115200
 
 api_url = 'http://localhost:8080/api/monitor'  # Update this URL to your API endpoint
 
