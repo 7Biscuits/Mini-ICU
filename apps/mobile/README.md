@@ -1,4 +1,4 @@
-# Fitness-React-Native-App
+# Mini-ICU-React-Native-App
 
 ## Get Started
 
