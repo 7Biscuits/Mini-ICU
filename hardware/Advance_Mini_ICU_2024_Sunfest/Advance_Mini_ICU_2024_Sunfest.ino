@@ -8,21 +8,21 @@
 // LED to 3.3V through a current-limiting resistor (usually 220Ω).
 
 // We'll use the TFT_eSPI library, which is optimized for the ESP32 and supports many TFT displays, including the ILI9488.
-// Very Important Go in Library section and do it accordingly instruction given
+// Very Important: Go to the Library section and do it accordingly instructions given
 // Navigate to the TFT_eSPI library folder. You can find it in your Arduino libraries directory.
 // Open the User_Setup.h file in the TFT_eSPI library folder.
 // Uncomment and set the correct driver for your display (e.g., #define ILI9488_DRIVER).
 
 
-// I am attaching user_setup.h file here as its you need to do with only ILI9488 Display ---->
+// I am attaching user_setup.h file here as it's what you need to do with only ILI9488 Display ---->
 
 //                            USER DEFINED SETTINGS
-// //   Set driver type, fonts to be loaded, pins used and SPI control method etc.
+// //   Set driver type, fonts to be loaded, pins used, and SPI control method, etc.
 // //
 // //   See the User_Setup_Select.h file if you wish to be able to define multiple
 // //   setups and then easily select which setup file is used by the compiler.
 // //
-// //   If this file is edited correctly then all the library example sketches should
+// //   If this file is edited correctly, then all the library example sketches should
 // //   run without the need to make any more changes for a particular hardware setup!
 // //   Note that some sketches are designed for a particular TFT pixel width/height
 
@@ -68,7 +68,7 @@
 // //#define SUPPORT_TRANSACTIONS
 
 
-// #define TFT_MISO  19 // Not connected because it not in use but if you want to connect then connect in GPIO 19
+// #define TFT_MISO  19 // Not connected because it is not in use, but if you want to connect, then connect in GPIO 19
 // #define TFT_MOSI 23
 // #define TFT_SCLK 18
 // #define TFT_CS   15  // Chip select control pin
@@ -193,7 +193,7 @@ void loop() {
     tft.println("%");
     postData(spO2);
 
-    // Control ventilator based on SpO2 level
+    // Control the ventilator based on SpO2 level
     if (spO2 >= 0 && spO2 < 90) {
       // tft.fillScreen(TFT_BLACK);
       tft.setTextSize(3);
@@ -235,3 +235,4 @@ void postData(int spo2) {
   Serial.println(URL);
   // delay(1500);
 }
+
