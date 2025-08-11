@@ -3,10 +3,10 @@ import time
 import re
 import requests
 
-port = '/dev/cu.usbserial-0001'  # Update this line with the correct port
+port = '/dev/cu.usbserial-0001' 
 baud_rate = 115200
 
-api_url = 'http://localhost:8080/api/monitor'  # Update this URL to your API endpoint
+api_url = 'http://localhost:8080/api/monitor'  
 
 def post_data(spo2, bpm):
     try:
@@ -22,8 +22,7 @@ try:
     with serial.Serial(port, baud_rate, timeout=1) as ser:
         print(f"Serial port {port} opened successfully")
         
-        time.sleep(2)  # Give the connection a second to settle
-
+        time.sleep(2)
         spo2 = None
         heart_beat = None
         last_post_time = time.time()
@@ -32,7 +31,7 @@ try:
             while True:
                 if ser.in_waiting > 0:
                     line = ser.readline().decode('utf-8').rstrip()
-                    # print(line)  # Optionally print the line for debugging
+                    # print(line) 
 
                     # Extract SpO2 value
                     spo2_match = re.search(r'SpO2: (\d+)', line)
